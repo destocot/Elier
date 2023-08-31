@@ -7,7 +7,8 @@
     "start": "nodemon server/server.js",
     "build": "webpack",
     "tailwind": "tailwindcss build -i ./public/styles.css -o ./client/dist/output.css",
-    "fec_tailwind": "tailwindcss build -i ./public/styles.css -o ./client/dist/output.css --watch "
+    "fec_tailwind": "tailwindcss build -i ./public/styles.css -o ./client/dist/output.css --watch ",
+    "seed-data": "psql -h localhost -U postgres  -f ./seed_data/seed_data.sql"
   },
   "keywords": [],
   "author": "",
