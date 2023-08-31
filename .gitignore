@@ -5,3 +5,6 @@ client/dist/
 coverage/
 .env
 seed_data/*.csv
+
+jest.config.js
+sdc.test.js
