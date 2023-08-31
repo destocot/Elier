@@ -1,42 +1,37 @@
 import React, { useEffect } from "react";
-import ReviewsList from './components/componentA/ReviewsList.jsx'
-import RatingSummary from './components/componentA/RatingSummary.jsx'
-import QuestionsAndAnswers from "./components/componentV/Q&A.jsx"
-import axios from 'axios'
-import Header from './components/ComponentHeith/Header.jsx';
-import AboutSection from './components/ComponentHeith/AboutSection.jsx';
-import Footer from './components/ComponentHeith/Footer.jsx';
-import OverviewModule from './components/ComponentHeith/OverviewModule.jsx';
-
+import ReviewsList from "./components/componentA/ReviewsList.jsx";
+import RatingSummary from "./components/componentA/RatingSummary.jsx";
+import QuestionsAndAnswers from "./components/componentV/Q&A.jsx";
+import axios from "axios";
+import Header from "./components/ComponentHeith/Header.jsx";
+import AboutSection from "./components/ComponentHeith/AboutSection.jsx";
+import Footer from "./components/ComponentHeith/Footer.jsx";
+import OverviewModule from "./components/ComponentHeith/OverviewModule.jsx";
 
 const App = () => {
-
-  return(
+  return (
     <div>
-      <div className='header'>
-      <Header />
+      <div className="header">
+        <Header />
       </div>
 
-      <div  id="overview" >
+      <div id="overview">
         <OverviewModule />
       </div>
 
       <div id="reviews">
-        <ReviewsList/>
+        <ReviewsList />
       </div>
       <div id="Questions" className="bg-[#27272A]">
-      <QuestionsAndAnswers />
-    </div>
-
+        <QuestionsAndAnswers />
+      </div>
 
       <div id="about">
         <AboutSection />
         <Footer />
       </div>
     </div>
-
   );
 };
 
 export default App;
-

@@ -1,12 +1,15 @@
 var compression = require('express-compression')
 const express = require('express');
 require('dotenv').config()
-const {questionRouter, postQuestionsRoute, updateHelpful, updateAnswer, addQuestion , reportAnswer, reportQuestion} = require('./questionRoutes.js')
+const { questionRouter, postQuestionsRoute, updateHelpful, updateAnswer, addQuestion, reportAnswer, reportQuestion } = require('./questionRoutes.js')
 const bodyParser = require('body-parser');
 const path = require('path');
 const axios = require('axios');
 const basePath = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfe';
 const reviewsRouter = require('./reviewsRoutes.js');
+
+// DATABASE
+const pool = require('./database');
 
 // Create Express app
 const app = express();
@@ -37,6 +40,18 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/postgrestest', async (req, res) => {
+  try {
+    const reviews = await pool.query('SELECT * FROM review');
+    res.json(reviews.rows);
+  } catch (err) {
+    console.error(err);
+  }
+})
+
+
+
+
 
 //Amelia's section
 app.use('/reviews', reviewsRouter);
@@ -45,33 +60,33 @@ app.use('/reviews', reviewsRouter);
 //--------------------------------------------------------------------------------------
 
 //Victor's section
-app.put("/helpful/:question_id", (req,res) => {
+app.put("/helpful/:question_id", (req, res) => {
   updateHelpful(req)
 })
 
-app.put("/helpful/:answer_id/answer", (req,res) => {
+app.put("/helpful/:answer_id/answer", (req, res) => {
   updateAnswer(req)
 })
 
-app.post("/questions/:question_id" , (req, res) => {
+app.post("/questions/:question_id", (req, res) => {
   postQuestionsRoute(req)
 })
 
-app.get("/questions/:product_id", (req,res) => {
+app.get("/questions/:product_id", (req, res) => {
   questionRouter(req).then((result) => {
     res.send(result)
   })
 })
 
-app.post("/addQuestion/:product_id", (req,res) => {
+app.post("/addQuestion/:product_id", (req, res) => {
   addQuestion(req)
 })
 
-app.put("/reportQuestion/:question_id", (req,res) => {
+app.put("/reportQuestion/:question_id", (req, res) => {
   reportQuestion(req)
 })
 
-app.put("/reportAnswer/:answer_id", (req,res) => {
+app.put("/reportAnswer/:answer_id", (req, res) => {
   reportAnswer(req)
 })
 
@@ -108,9 +123,9 @@ app.get('/api/product', (req, res) => {
   };
 
   axios.get('https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfe/products/37315', requestOptions)
-  .then(response => {
-    res.json(response.data);
-  })
+    .then(response => {
+      res.json(response.data);
+    })
     .catch(error => {
       console.error('Error fetching product info:', error);
       res.status(500).json({ error: 'Internal Server Error' });
