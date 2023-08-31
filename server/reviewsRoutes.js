@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const axios = require('axios');
 
-let productId = 30;
+let productId = 34;
 
 reviewsRouter.get('/getAllReviews', async (req, res) => {
   const reviews = await queries.getReviews(productId);
@@ -18,15 +18,16 @@ reviewsRouter.get('/getRatings', async (req, res) => {
 })
 
 reviewsRouter.post('/reviews', (req, res) => {
+  console.log('here', req.body);
   const requestData = req.body;
   mutations.postReviews(requestData, productId);
-  res.status(201).send();
+  res.status(201).send(`Successfully posted new review to ${productId}`);
 });
 
 reviewsRouter.put('/updateHelpful/:review_id', (req, res) => {
   const reviewId = req.params.review_id;
   mutations.updateHelpfulness(reviewId);
-  res.status(202).send();
+  res.status(202).send(`${reviewId} helpfulness has been successfully update`);
 });
 
 module.exports = reviewsRouter;
