@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const axios = require('axios');
 
-let productId = 34;
+let productId = 37;
 
 reviewsRouter.get('/getAllReviews', async (req, res) => {
   const reviews = await queries.getReviews(productId);

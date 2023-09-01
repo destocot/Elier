@@ -21,7 +21,7 @@ CREATE TABLE review(
     id SERIAL PRIMARY KEY,
     product_id INTEGER NOT NULL,
     rating INTEGER NOT NULL,
-    date BIGINT NOT NULL,
+    old_date BIGINT NOT NULL,
     summary  VARCHAR(300),
     body TEXT,
     recommend BOOLEAN,
@@ -47,11 +47,22 @@ CREATE TABLE characteristic_review(
 
 \copy picture (id, review_id, url) FROM './seed_data/reviews_photos.csv' WITH (FORMAT csv, HEADER);
 
-\copy review (id, product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness) FROM './seed_data/reviews.csv' WITH (FORMAT csv, HEADER);
+\copy review (id, product_id, rating, old_date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness) FROM './seed_data/reviews.csv' WITH (FORMAT csv, HEADER);
+
+ALTER TABLE review
+ADD COLUMN date DATE;
+
+UPDATE review
+SET date = DATE_TRUNC('day', TIMESTAMP 'epoch' + (old_date / 1000) * INTERVAL '1 second');
+
+ALTER TABLE review
+DROP COLUMN old_date;
 
 \copy characteristics (id, product_id, name) FROM './seed_data/characteristics.csv' WITH (FORMAT csv, HEADER);
 
 \copy characteristic_review (id, characteristic_id, review_id, value) FROM './seed_data/characteristic_reviews.csv' WITH (FORMAT csv, HEADER);
+
+
 
 
 SELECT setval( pg_get_serial_sequence('picture', 'id'),

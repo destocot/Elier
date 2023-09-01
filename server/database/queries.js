@@ -2,26 +2,17 @@ const pool = require('./index.js');
 
 const getReviews = async (productId) => {
   const reviewsQuery = `
-  SELECT review.*, ARRAY_AGG(picture.id || ':' || picture.url) AS photos
+  SELECT review.*, ARRAY_AGG(JSON_BUILD_OBJECT(
+    'id', picture.id,
+    'url', picture.url
+  )) AS photos
   FROM review
   LEFT JOIN picture
   ON review.id = picture.review_id
   WHERE product_id = ($1)
   GROUP BY review.id`;
-  const reviewsData = await pool.query(reviewsQuery, [productId]);
-  const reviews = reviewsData.rows.map((row) => {
-    let photos;
-    if (row.photos[0] === null) {
-      photos = null;
-    } else {
-      photos = row.photos.map((photo) => {
-        const [id, url] = photo.split(':http');
-        return { id, url: `http${url}` };
-      });
-    }
-    return { ...row, review_id: row.id, date: new Date(Number(row.date)), photos }
-  })
-  return reviews;
+  const { rows } = await pool.query(reviewsQuery, [productId]);
+  return rows;
 };
 
 const getMeta = async (product_id) => {
