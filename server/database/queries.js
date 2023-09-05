@@ -1,34 +1,32 @@
 const pool = require('./index.js');
 
 const getReviews = async (productId) => {
-  const reviewsQuery = `
-  SELECT review.*, ARRAY_AGG(JSON_BUILD_OBJECT(
-    'id', picture.id,
-    'url', picture.url
-  )) AS photos
-  FROM review
-  LEFT JOIN picture
-  ON review.id = picture.review_id
-  WHERE product_id = ($1)
-  GROUP BY review.id`;
+  // const reviewsQuery = `
+  // SELECT review.id as review_id, review.summary, review.body, review.reviewer_name, review.date, review.rating, review.helpfulness,
+  // ARRAY_AGG(JSON_BUILD_OBJECT(
+  //   'id', picture.id,
+  //   'url', picture.url
+  // )) AS photos
+  // FROM review
+  // LEFT JOIN picture
+  // ON review.id = picture.review_id
+  // WHERE product_id = ($1)
+  // GROUP BY review.id`;
+  const reviewsQuery = `SELECT * FROM GetReviewsForProduct($1);`
   const { rows } = await pool.query(reviewsQuery, [productId]);
   return rows;
 };
 
 const getMeta = async (product_id) => {
-  const recommendQuery = 'SELECT recommend FROM review WHERE product_id = ($1)';
-  const recommendData = await pool.query(recommendQuery, [product_id]);
-  const recommended = recommendData.rows.reduce((accumulator, curr) => {
-    accumulator[curr.recommend] += 1;
-    return accumulator;
-  }, { false: 0, true: 0 });
+  const reccomendAndRatingQuery = 'SELECT recommend, rating FROM review WHERE product_id = ($1)';
 
-  const ratingQuery = 'SELECT rating FROM review WHERE product_id = ($1)';
-  const ratingData = await pool.query(ratingQuery, [product_id]);
-  const ratings = ratingData.rows.reduce((accumulator, curr) => {
-    accumulator[curr.rating] += 1;
-    return accumulator;
-  }, { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 });
+  const { rows } = await pool.query(reccomendAndRatingQuery, [product_id]);
+  const data = rows.reduce((accu, curr) => {
+    const { recommend, rating } = curr;
+    accu.recommended[recommend] += 1;
+    accu.ratings[rating] += 1;
+    return accu;
+  }, { recommended: { false: 0, true: 0 }, ratings: { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 } });
 
   const reviewQuery = 'SELECT id from review WHERE product_id = ($1)';
   const reviews = await pool.query(reviewQuery, [product_id]);
@@ -82,11 +80,50 @@ const getMeta = async (product_id) => {
 
   return {
     product_id,
-    ratings,
-    recommended,
+    ...data,
     characteristics
-  };
+  }
 }
 
 
+
+
 module.exports = { getReviews, getMeta };
+
+// function ver
+// CREATE OR REPLACE FUNCTION GetReviewsForProduct(productId int)
+// RETURNS TABLE (
+//     review_id integer,
+//     summary varchar(300),
+//     body text,
+//     reviewer_name varchar(150),
+//     date date,
+//     rating integer,
+//     helpfulness integer,
+//     photos json[]
+// )
+// LANGUAGE plpgsql
+// AS
+// $$
+// BEGIN
+//     RETURN QUERY (
+//         SELECT
+//             review.id as review_id,
+//             review.summary,
+//             review.body,
+//             review.reviewer_name,
+//             review.date,
+//             review.rating,
+//             review.helpfulness,
+//             ARRAY_AGG(JSON_BUILD_OBJECT(
+//                 'id', picture.id,
+//                 'url', picture.url
+//             )) AS photos
+//         FROM review
+//         LEFT JOIN picture
+//         ON review.id = picture.review_id
+//         WHERE product_id = productId
+//         GROUP BY review.id
+//     );
+// END;
+// $$;

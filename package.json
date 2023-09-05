@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
+    "start-dev": "nodemon server/server.js",
     "build": "tailwindcss build -i ./public/styles.css -o ./client/dist/output.css && webpack",
     "fec_tailwind": "tailwindcss build -i ./public/styles.css -o ./client/dist/output.css --watch ",
     "seed-data": "psql -h localhost -U postgres  -f ./seed_data/seed_data.sql",
@@ -26,6 +27,7 @@
     "express": "^4.18.2",
     "express-compression": "^1.0.2",
     "moment": "^2.29.4",
+    "morgan": "^1.10.0",
     "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

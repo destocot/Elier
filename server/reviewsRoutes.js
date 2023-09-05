@@ -5,20 +5,27 @@ require('dotenv').config();
 
 const axios = require('axios');
 
-let productId = 37;
+let productId = 32;
 
 reviewsRouter.get('/getAllReviews', async (req, res) => {
-  const reviews = await queries.getReviews(productId);
-  res.status(200).send(reviews);
+  try {
+    const reviews = await queries.getReviews(productId);
+    res.status(200).send(reviews);
+  } catch (error) {
+    res.status(404).send(error);
+  }
 });
 
 reviewsRouter.get('/getRatings', async (req, res) => {
-  const meta = await queries.getMeta(productId);
-  res.status(200).send(meta);
-})
+  try {
+    const meta = await queries.getMeta(productId);
+    res.status(200).send(meta);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+});
 
 reviewsRouter.post('/reviews', (req, res) => {
-  console.log('here', req.body);
   const requestData = req.body;
   mutations.postReviews(requestData, productId);
   res.status(201).send(`Successfully posted new review to ${productId}`);

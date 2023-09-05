@@ -62,9 +62,6 @@ DROP COLUMN old_date;
 
 \copy characteristic_review (id, characteristic_id, review_id, value) FROM './seed_data/characteristic_reviews.csv' WITH (FORMAT csv, HEADER);
 
-
-
-
 SELECT setval( pg_get_serial_sequence('picture', 'id'),
                (SELECT max(id) from picture) );
 
@@ -76,7 +73,6 @@ SELECT setval( pg_get_serial_sequence('characteristics', 'id'),
 
 SELECT setval( pg_get_serial_sequence('characteristic_review', 'id'),
                (SELECT max(id) from characteristic_review) );
-
 
 CREATE INDEX review_index ON picture(review_id);
 CREATE INDEX product_index ON review(product_id);

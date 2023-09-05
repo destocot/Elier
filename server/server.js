@@ -7,6 +7,7 @@ const path = require('path');
 const axios = require('axios');
 const basePath = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfe';
 const reviewsRouter = require('./reviewsRoutes.js');
+const morgan = require('morgan');
 
 // DATABASE
 const pool = require('./database');
@@ -53,7 +54,8 @@ app.get('/postgrestest', async (req, res) => {
 
 
 
-//Amelia's section
+//Amelia's section//logger
+app.use('/reviews', morgan('tiny'));
 app.use('/reviews', reviewsRouter);
 
 

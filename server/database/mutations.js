@@ -2,8 +2,7 @@ const pool = require('./index.js');
 
 const postReviews = async (data, productId) => {
   const { rating, summary, body, recommend, name, email, helpfulness, characteristics } = data;
-  const date = Date.now();
-  const values = [productId, rating, date, summary, body, recommend, false, name, email, null, 0];
+  const values = [productId, rating, new Date().toISOString(), summary, body, recommend, false, name, email, null, 0];
 
   const query = `
     INSERT INTO review
