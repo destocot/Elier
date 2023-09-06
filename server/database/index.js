@@ -7,8 +7,6 @@ const pool = new Pool({
   host: process.env.PGHOST,
   port: process.env.PGPORT,
   database: process.env.PGDATABASE,
-  max: 14,
-  idleTimeoutMillis: 1000
 });
 
 module.exports = pool;
