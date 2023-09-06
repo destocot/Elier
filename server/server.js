@@ -50,7 +50,9 @@ app.get('/postgrestest', async (req, res) => {
   }
 })
 
-
+app.get('/loaderio-3fd81b7076756fe9ed28374cf329572d', (req, res) => {
+  res.send('loaderio-3fd81b7076756fe9ed28374cf329572d');
+});
 
 
 
