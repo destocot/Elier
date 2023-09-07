@@ -15,16 +15,16 @@ const App = () => {
         <Header />
       </div>
 
-      <div id="overview">
+      {/* <div id="overview">
         <OverviewModule />
-      </div>
+      </div> */}
 
       <div id="reviews">
         <ReviewsList />
       </div>
-      <div id="Questions" className="bg-[#27272A]">
+      {/* <div id="Questions" className="bg-[#27272A]">
         <QuestionsAndAnswers />
-      </div>
+      </div> */}
 
       <div id="about">
         <AboutSection />
